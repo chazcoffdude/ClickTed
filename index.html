@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automobile</title> 
+
+    <link rel="stylesheet" href="CSS/style.css">
+
+    <script src="JS/jquery.js"></script>
+
+    
+  
+    
+    <style>
+      body{
+        
+        font-size: 30px;
+        text-align: center;
+        font-family: simpfont;
+        color:rgb(36, 0, 128);
+        background-color: rgb(185, 167, 230);
+      }
+      @font-face{
+        font-family:simpfont;
+        src: url("fonts/simpsontext.otf");
+      }
+      
+      body.highlight{
+        background-color: yellow;
+      }
+
+      .effectbox{
+        z-index: 1;
+
+        display: none;
+        pointer-events: none;     
+        height: 140px;
+        width: 140px;   
+      }
+
+
+      #bearboy{
+      cursor:grabbing;
+      }
+
+
+    </style>
+</head>
+<body>
+
+
+  <div class="brick">
+   
+      
+
+    
+    <div id="countdown">10000</div>
+     <button id="countdownstart">START GAME</button>
+
+  </div>
+
+
+  <div id="bearcontainer">
+  <img src="images/bear1.png" id="bearboy">
+   <p id="clickbox">CLICKS: 0</p>
+   <br>
+   <p id="finalscore">SCORE: 0</p>
+   <br>
+   <p id="highscore">HIGH-SCORE: 0</p>
+
+
+  
+<img id="effectbox" class="effectbox" src="images/effect1.gif">    
+   </div>
+
+  <br>
+  <br>
+
+   <div style="display: flexbox;">
+  <img id="mole1" src="images/mole1.png">
+  <img id="mole2" src="images/mole2.png">
+  <img id="mole3" src="images/mole3.png">
+  <img id="mole4" src="images/mole4.png">
+
+  </div>
+
+  <script>
+
+    //startbutton
+    $("#effectbox").position = $("#bearboy").position;
+    let count2 = 0; //minutes
+    let count3 = 0; //hours
+    let count4 = 0; //days
+    let countdownorigin = 300 // change this to edit how much time the game gives you
+    let boyclicks = 0;
+    var highscore = 0;
+    let bearresponse = null;
+    let countdownmax = countdownorigin; 
+    let gamerunning = false;
+    let changelock = false;
+    let softlock = false;
+    let gameready = true;
+
+    $("#countdown").text(countdownmax);
+
+
+
+
+   $("#bearboy").click(function(mouse){
+  
+   if(gamerunning == true){
+   boyclicks += 50;
+   
+   let effectclone = $("#effectbox").clone();
+   effectclone.appendTo("#bearcontainer");
+
+   effectclone.attr("src", "images/effect"+Math.floor((Math.random() * 10) + 1)+".gif");
+   effectclone.css({
+   position: 'absolute',
+   left: mouse.pageX + Math.floor((Math.random() * 60) + 30),
+   top: mouse.pageY - Math.floor((Math.random() * 80) + 60),
+   display: 'block'
+  
+   
+  
+   })
+   console.log(mouse.pageX);
+   console.log(mouse.pageY);
+
+      effectclone.fadeOut(1500, function() {
+    
+  });
+   selfdestruct = setInterval(function(){
+   effectclone.remove();
+ 
+   }, 700);
+
+
+   if(bearresponse != null){
+     clearInterval(bearresponse);
+   }
+
+
+   $("#clickbox").text("CLICKS: "+boyclicks);
+   
+
+   if(softlock != true){$("#bearboy").attr("src", "images/bear2.png");}
+   bearresponse = setInterval(function(){
+  
+   $("#effectbox").css("display", "none");
+
+   if(softlock != true){$("#bearboy").attr("src", "images/bear1.png");}
+   clearInterval(bearresponse);
+   }, 144);
+   }
+
+
+
+   })
+
+
+
+
+
+
+
+
+
+   $("#countdownstart").click(function(){
+   
+   if(gamerunning == true || gameready != true){
+
+    return
+   }else{
+     gamerunning = true;
+   }
+   gameready = false;
+   cdinterval = setInterval(function(){
+
+   if(countdownmax <= 0){
+     clearInterval(cdinterval);
+     countdownmax = countdownorigin;
+     $("#countdown").text(countdownmax);
+     $("#finalscore").text("SCORE: "+boyclicks);
+ 
+     $("#clickbox").text("CLICKS: "+boyclicks);
+     if(boyclicks>highscore){
+     highscore = boyclicks;  
+     $("#highscore").text("HIGH-SCORE: "+boyclicks);
+     if(boyclicks > 50){
+       explosioneffect();
+     
+     
+     }
+        boyclicks = 0;
+    gamerunning = false;
+   }
+   }
+
+   
+  
+
+   countdownmax = countdownmax - 1;
+  
+   $("#countdown").text(countdownmax);
+
+  
+   }, 10);
+   
+   })
+   
+//explosion effect function here
+explosioneffect = function(){
+console.log($("#bearboy").position());
+softlock = true;
+$("#bearboy").attr("src", "images/beardead1.png");
+//chuck of effect code below here
+   let effectclone = $("#effectbox").clone();
+   effectclone.appendTo("#bearcontainer");
+  
+   effectclone.attr("src", "images/explosion.gif");
+   effectclone.width("150px");
+   effectclone.height("150px");
+   effectclone.css({
+
+   position: 'absolute',
+   display: 'block',
+   left: $("#bearboy").position().left + 80,
+   top: $("#bearboy").position().top + 25,
+
+   })
+   selfdestruct = setInterval(function(){
+   effectclone.remove();
+   }, 700);
+  
+//chunk ends above
+
+
+
+waitin = setTimeout(function(){
+
+gameready = true;
+softlock = false;
+}, 1100);
+
+};
+    $("#startbut").click(
+     function(){
+  
+    interval = setInterval(function(){
+    count++;
+    
+
+    if(count >= 100){
+      count = 0;
+      count2++;
+    }
+    if(count2 >= 60){
+     count2 = 0;
+     count3++;
+    }
+    if(count>10){
+
+    }
+
+      $("#numberdisplay").text("hours: "+count4+" minutes: "+count3+" seconds: "+count2+" milli-seconds: "+count);
+    }, 10);
+
+    if(count3 >= 60){
+      count3 = 0
+      count4++;
+    }
+    
+    })
+    //stopbutton
+
+    $("#stopbut").click(
+     function(){
+   
+    
+    clearInterval(interval);
+    
+    })
+    
+    let day = [
+      ["Dignity", 8, 7],
+      ["Grace", 1, 7],
+      ["Attention", 2, 7],
+      ["Sarcasm", 6, 7],
+      ["Self-worth", 7,]
+
+    ];
+day[4][1]++
+day[0][1]--
+
+
+day[0][1] += day[3][1];
+day[3][1] -= day[3][1];
+
+for (let i = 0; i < day.length; i++) {
+
+for (let j = 0; j < day[i].length; j++) {
+console.log('[' + i + ',' + j + '] = ' + day[i][j]);
+}
+}
+
+console.table(day);
+
+
+let maps = new Map();
+maps.set('name', "Nard");
+maps.set('age', 21);
+maps.set('occupation', "NOTHING");
+console.log(maps.get('name')+ " " + maps.get('age') + " " + maps.get('occupation') );
+
+console.log(maps.size);
+console.log(maps.keys());
+
+
+        </script>
+  
+ </body>
+</html>
+
+
