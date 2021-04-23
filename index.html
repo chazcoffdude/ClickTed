@@ -89,7 +89,7 @@
     let count2 = 0; //minutes
     let count3 = 0; //hours
     let count4 = 0; //days
-    let countdownorigin = 300 // change this to edit how much time the game gives you
+    let countdownorigin = 3000 // change this to edit how much time the game gives you
     let boyclicks = 0;
     var highscore = 0;
     let bearresponse = null;
@@ -107,7 +107,7 @@
    $("#bearboy").click(function(mouse){
   
    if(gamerunning == true){
-   boyclicks += 50;
+   boyclicks += 1;
    
    let effectclone = $("#effectbox").clone();
    effectclone.appendTo("#bearcontainer");
@@ -305,14 +305,7 @@ console.log('[' + i + ',' + j + '] = ' + day[i][j]);
 console.table(day);
 
 
-let maps = new Map();
-maps.set('name', "Nard");
-maps.set('age', 21);
-maps.set('occupation', "NOTHING");
-console.log(maps.get('name')+ " " + maps.get('age') + " " + maps.get('occupation') );
 
-console.log(maps.size);
-console.log(maps.keys());
 
 
         </script>
